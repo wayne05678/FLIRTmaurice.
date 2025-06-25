@@ -1,0 +1,843 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   FlirtMaurice - Dynamic Dating App for Mauritius
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap" rel="stylesheet"/>
+  <style>
+   body {
+      font-family: "Poppins", sans-serif;
+    }
+    /* Scrollbar for matches carousel */
+    #matches-list::-webkit-scrollbar {
+      height: 8px;
+    }
+    #matches-list::-webkit-scrollbar-thumb {
+      background-color: #ec4899;
+      border-radius: 4px;
+    }
+  </style>
+ </head>
+ <body class="bg-gradient-to-b from-pink-50 to-white min-h-screen flex flex-col">
+  <!-- Header / Navbar -->
+  <header class="bg-white shadow-md sticky top-0 z-50">
+   <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+    <div class="flex items-center space-x-2">
+     <img alt="FlirtMaurice logo, stylized FM letters in pink and white" class="rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/0ece8850-947b-4c23-1d69-f4db445de854.jpg" width="40"/>
+     <h1 class="text-2xl font-bold text-pink-600">
+      FlirtMaurice
+     </h1>
+    </div>
+    <nav aria-label="Primary Navigation" class="hidden md:flex space-x-8 text-gray-700 font-semibold">
+     <button aria-controls="discover" aria-expanded="true" class="hover:text-pink-600 transition focus:outline-none" id="nav-discover-btn">
+      Discover
+     </button>
+     <button aria-controls="matches" aria-expanded="false" class="hover:text-pink-600 transition focus:outline-none" id="nav-matches-btn">
+      Matches
+     </button>
+     <button aria-controls="messages" aria-expanded="false" class="hover:text-pink-600 transition focus:outline-none" id="nav-messages-btn">
+      Messages
+     </button>
+     <button aria-controls="profile" aria-expanded="false" class="hover:text-pink-600 transition focus:outline-none" id="nav-profile-btn">
+      Profile
+     </button>
+    </nav>
+    <button aria-label="Open menu" class="md:hidden text-pink-600 focus:outline-none" id="menu-btn">
+     <i class="fas fa-bars fa-lg">
+     </i>
+    </button>
+   </div>
+   <nav aria-label="Mobile Navigation" class="hidden md:hidden bg-white border-t border-pink-100" id="mobile-menu">
+    <button class="block w-full text-left px-4 py-3 border-b border-pink-100 text-pink-600 font-semibold focus:outline-none" data-target="discover">
+     Discover
+    </button>
+    <button class="block w-full text-left px-4 py-3 border-b border-pink-100 text-pink-600 font-semibold focus:outline-none" data-target="matches">
+     Matches
+    </button>
+    <button class="block w-full text-left px-4 py-3 border-b border-pink-100 text-pink-600 font-semibold focus:outline-none" data-target="messages">
+     Messages
+    </button>
+    <button class="block w-full text-left px-4 py-3 text-pink-600 font-semibold focus:outline-none" data-target="profile">
+     Profile
+    </button>
+   </nav>
+  </header>
+  <!-- Main Content -->
+  <main class="flex-grow container mx-auto px-4 py-6 flex flex-col">
+   <!-- Sections container -->
+   <section class="mb-12" id="hero">
+    <div class="bg-pink-50 rounded-lg p-6 md:p-12 flex flex-col md:flex-row items-center md:items-start gap-8">
+     <div class="md:w-1/2 text-center md:text-left">
+      <h2 class="text-4xl font-extrabold text-pink-600 mb-4">
+       Find Your Perfect Match in Mauritius
+      </h2>
+      <p class="text-gray-700 mb-6 text-lg">
+       FlirtMaurice connects you with singles across the beautiful island
+            of Mauritius. Discover, chat, and meet your soulmate today!
+      </p>
+      <button aria-label="Get started with FlirtMaurice" class="inline-block bg-pink-600 text-white px-8 py-3 rounded-full font-semibold shadow-lg hover:bg-pink-700 transition" id="btn-get-started">
+       Get Started
+      </button>
+     </div>
+     <div class="md:w-1/2">
+      <img alt="A happy couple holding hands and walking on a sunny Mauritius beach with turquoise water and palm trees" class="rounded-lg shadow-lg mx-auto" height="400" src="https://storage.googleapis.com/a1aa/image/ce65b1a7-e84b-40f1-e284-7d309ad2149e.jpg" width="600"/>
+     </div>
+    </div>
+   </section>
+   <!-- Dynamic Sections -->
+   <section aria-label="Discover Singles" class="hidden flex-col" id="discover">
+    <h3 class="text-3xl font-bold text-pink-600 mb-8 text-center">
+     Discover Singles Near You
+    </h3>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6" id="discover-list" role="list">
+     <!-- Profiles dynamically inserted here -->
+    </div>
+    <div class="mt-8 text-center">
+     <button aria-label="Load more profiles" class="bg-pink-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-pink-700 transition" id="load-more-btn">
+      Load More
+     </button>
+    </div>
+   </section>
+   <section aria-label="Your Matches" class="hidden flex-col" id="matches" tabindex="0">
+    <h3 class="text-3xl font-bold text-pink-600 mb-8 text-center">
+     Your Matches
+    </h3>
+    <div aria-live="polite" class="flex space-x-6 overflow-x-auto px-4 py-2" id="matches-list" role="list">
+     <!-- Matches dynamically inserted here -->
+    </div>
+    <div class="mt-6 text-center">
+     <button aria-label="Clear all matches" class="bg-pink-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-pink-700 transition" id="clear-matches-btn">
+      Clear Matches
+     </button>
+    </div>
+   </section>
+   <section aria-label="Your Messages" class="hidden flex-col max-w-4xl mx-auto" id="messages" tabindex="0">
+    <h3 class="text-3xl font-bold text-pink-600 mb-8 text-center">
+     Your Messages
+    </h3>
+    <div aria-live="polite" class="bg-white rounded-lg shadow-md p-6 max-h-[400px] overflow-y-auto" id="messages-list" role="list">
+     <!-- Messages dynamically inserted here -->
+    </div>
+    <form aria-label="Send new message" class="mt-4 flex space-x-4" id="message-form">
+     <select aria-label="Select recipient" aria-required="true" class="flex-shrink-0 w-40 px-3 py-2 rounded-lg border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500" id="message-recipient" required="">
+      <option disabled="" selected="" value="">
+       Select recipient
+      </option>
+     </select>
+     <input aria-label="Message text" aria-required="true" class="flex-grow px-4 py-2 rounded-lg border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500" id="message-input" placeholder="Type your message..." required="" type="text"/>
+     <button aria-label="Send message" class="bg-pink-600 text-white px-6 py-2 rounded-full font-semibold hover:bg-pink-700 transition" type="submit">
+      Send
+     </button>
+    </form>
+   </section>
+   <section aria-label="Your Profile" class="hidden max-w-3xl mx-auto bg-pink-50 rounded-lg p-8 shadow-lg" id="profile" tabindex="0">
+    <h3 class="text-3xl font-bold text-pink-600 mb-6 text-center">
+     Your Profile
+    </h3>
+    <form class="space-y-6" id="profile-form" novalidate="">
+     <div>
+      <label class="block text-pink-700 font-semibold mb-2" for="profile-name">
+       Full Name
+      </label>
+      <input aria-required="true" class="w-full px-4 py-3 rounded-lg border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500" id="profile-name" name="profile-name" required="" type="text"/>
+     </div>
+     <div>
+      <label class="block text-pink-700 font-semibold mb-2" for="profile-email">
+       Email Address
+      </label>
+      <input aria-required="true" class="w-full px-4 py-3 rounded-lg border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500" id="profile-email" name="profile-email" required="" type="email"/>
+     </div>
+     <div>
+      <label class="block text-pink-700 font-semibold mb-2" for="profile-location">
+       Location
+      </label>
+      <select aria-required="true" class="w-full px-4 py-3 rounded-lg border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500" id="profile-location" name="profile-location" required="">
+       <option disabled="" value="">
+        Select your city
+       </option>
+       <option>
+        Port Louis
+       </option>
+       <option>
+        Curepipe
+       </option>
+       <option>
+        Grand Baie
+       </option>
+       <option>
+        Flic en Flac
+       </option>
+       <option>
+        Mahebourg
+       </option>
+       <option>
+        Tamarin
+       </option>
+       <option>
+        Quatre Bornes
+       </option>
+      </select>
+     </div>
+     <div>
+      <label class="block text-pink-700 font-semibold mb-2" for="profile-gender">
+       Gender
+      </label>
+      <select aria-required="true" class="w-full px-4 py-3 rounded-lg border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500" id="profile-gender" name="profile-gender" required="">
+       <option disabled="" value="">
+        Select your gender
+       </option>
+       <option>
+        Female
+       </option>
+       <option>
+        Male
+       </option>
+       <option>
+        Non-binary
+       </option>
+       <option>
+        Prefer not to say
+       </option>
+      </select>
+     </div>
+     <div>
+      <label class="block text-pink-700 font-semibold mb-2" for="profile-bio">
+       About You
+      </label>
+      <textarea class="w-full px-4 py-3 rounded-lg border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500 resize-none" id="profile-bio" name="profile-bio" placeholder="Tell others about yourself..." rows="4"></textarea>
+     </div>
+     <div>
+      <label class="block text-pink-700 font-semibold mb-2" for="profile-photo">
+       Profile Photo URL
+      </label>
+      <input class="w-full px-4 py-3 rounded-lg border border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-500" id="profile-photo" name="profile-photo" placeholder="https://example.com/photo.jpg" type="url"/>
+     </div>
+     <button aria-label="Save profile" class="w-full bg-pink-600 text-white py-3 rounded-full font-semibold hover:bg-pink-700 transition" type="submit">
+      Save Profile
+     </button>
+    </form>
+   </section>
+  </main>
+  <!-- Footer -->
+  <footer class="bg-white border-t border-pink-100 mt-20 py-6">
+   <div class="container mx-auto px-4 text-center text-gray-600 text-sm">
+    © 2024 FlirtMaurice. All rights reserved. Made with
+    <i class="fas fa-heart text-pink-600">
+    </i>
+    for Mauritius.
+   </div>
+  </footer>
+  <script>
+   // Data storage keys
+    const STORAGE_KEYS = {
+      PROFILE: "flirtmaurice_profile",
+      DISCOVERED: "flirtmaurice_discovered",
+      MATCHES: "flirtmaurice_matches",
+      MESSAGES: "flirtmaurice_messages",
+    };
+
+    // Sample profiles pool (would come from backend in real app)
+    const sampleProfiles = [
+      {
+        id: "p1",
+        name: "Aisha",
+        age: 27,
+        location: "Port Louis",
+        bio: "Loves hiking, beach volleyball, and Creole cuisine.",
+        photo:
+          "https://placehold.co/400x400/png?text=Aisha&font=roboto",
+        gender: "Female",
+      },
+      {
+        id: "p2",
+        name: "Jean",
+        age: 30,
+        location: "Curepipe",
+        bio: "Enjoys photography, music festivals, and exploring nature.",
+        photo:
+          "https://placehold.co/400x400/png?text=Jean&font=roboto",
+        gender: "Male",
+      },
+      {
+        id: "p3",
+        name: "Lina",
+        age: 25,
+        location: "Grand Baie",
+        bio: "Passionate about yoga, cooking, and beach cleanups.",
+        photo:
+          "https://placehold.co/400x400/png?text=Lina&font=roboto",
+        gender: "Female",
+      },
+      {
+        id: "p4",
+        name: "Raj",
+        age: 32,
+        location: "Flic en Flac",
+        bio: "Loves surfing, cooking spicy food, and live music.",
+        photo:
+          "https://placehold.co/400x400/png?text=Raj&font=roboto",
+        gender: "Male",
+      },
+      {
+        id: "p5",
+        name: "Maya",
+        age: 28,
+        location: "Mahebourg",
+        bio: "Enjoys dancing sega, reading novels, and beach picnics.",
+        photo:
+          "https://placehold.co/400x400/png?text=Maya&font=roboto",
+        gender: "Female",
+      },
+      {
+        id: "p6",
+        name: "Kumar",
+        age: 29,
+        location: "Quatre Bornes",
+        bio: "Passionate about football, cooking, and traveling.",
+        photo:
+          "https://placehold.co/400x400/png?text=Kumar&font=roboto",
+        gender: "Male",
+      },
+      {
+        id: "p7",
+        name: "Sonia",
+        age: 26,
+        location: "Tamarin",
+        bio: "Loves snorkeling, painting, and beach yoga.",
+        photo:
+          "https://placehold.co/400x400/png?text=Sonia&font=roboto",
+        gender: "Female",
+      },
+      {
+        id: "p8",
+        name: "Arjun",
+        age: 31,
+        location: "Port Louis",
+        bio: "Enjoys football, music, and beach parties.",
+        photo:
+          "https://placehold.co/400x400/png?text=Arjun&font=roboto",
+        gender: "Male",
+      },
+      {
+        id: "p9",
+        name: "Leena",
+        age: 27,
+        location: "Flic en Flac",
+        bio: "Yoga lover, foodie, and nature enthusiast.",
+        photo:
+          "https://placehold.co/400x400/png?text=Leena&font=roboto",
+        gender: "Female",
+      },
+      {
+        id: "p10",
+        name: "Dinesh",
+        age: 33,
+        location: "Mahebourg",
+        bio: "Beach lover, cook, and music fan.",
+        photo:
+          "https://placehold.co/400x400/png?text=Dinesh&font=roboto",
+        gender: "Male",
+      },
+    ];
+
+    // State
+    let userProfile = null;
+    let discoveredProfiles = [];
+    let matches = [];
+    let messages = [];
+
+    // DOM Elements
+    const discoverSection = document.getElementById("discover");
+    const matchesSection = document.getElementById("matches");
+    const messagesSection = document.getElementById("messages");
+    const profileSection = document.getElementById("profile");
+    const heroSection = document.getElementById("hero");
+
+    const discoverList = document.getElementById("discover-list");
+    const matchesList = document.getElementById("matches-list");
+    const messagesList = document.getElementById("messages-list");
+    const messageForm = document.getElementById("message-form");
+    const messageRecipientSelect = document.getElementById("message-recipient");
+    const messageInput = document.getElementById("message-input");
+    const profileForm = document.getElementById("profile-form");
+
+    const loadMoreBtn = document.getElementById("load-more-btn");
+    const clearMatchesBtn = document.getElementById("clear-matches-btn");
+
+    // Navigation buttons
+    const navDiscoverBtn = document.getElementById("nav-discover-btn");
+    const navMatchesBtn = document.getElementById("nav-matches-btn");
+    const navMessagesBtn = document.getElementById("nav-messages-btn");
+    const navProfileBtn = document.getElementById("nav-profile-btn");
+
+    // Mobile menu
+    const menuBtn = document.getElementById("menu-btn");
+    const mobileMenu = document.getElementById("mobile-menu");
+
+    // Pagination for discover
+    const DISCOVER_PAGE_SIZE = 4;
+    let discoverPage = 0;
+
+    // Utility: Save to localStorage
+    function saveToStorage(key, data) {
+      localStorage.setItem(key, JSON.stringify(data));
+    }
+
+    // Utility: Load from localStorage
+    function loadFromStorage(key) {
+      const data = localStorage.getItem(key);
+      if (!data) return null;
+      try {
+        return JSON.parse(data);
+      } catch {
+        return null;
+      }
+    }
+
+    // Initialize app state from storage or defaults
+    function initState() {
+      userProfile = loadFromStorage(STORAGE_KEYS.PROFILE);
+      discoveredProfiles = loadFromStorage(STORAGE_KEYS.DISCOVERED) || [];
+      matches = loadFromStorage(STORAGE_KEYS.MATCHES) || [];
+      messages = loadFromStorage(STORAGE_KEYS.MESSAGES) || [];
+    }
+
+    // Save all state to storage
+    function saveState() {
+      saveToStorage(STORAGE_KEYS.PROFILE, userProfile);
+      saveToStorage(STORAGE_KEYS.DISCOVERED, discoveredProfiles);
+      saveToStorage(STORAGE_KEYS.MATCHES, matches);
+      saveToStorage(STORAGE_KEYS.MESSAGES, messages);
+    }
+
+    // Render Discover Profiles (paginated)
+    function renderDiscover(reset = false) {
+      if (reset) {
+        discoverList.innerHTML = "";
+        discoverPage = 0;
+      }
+      // Filter out user profile and already matched profiles
+      const filteredProfiles = sampleProfiles.filter(
+        (p) =>
+          (!userProfile || p.id !== userProfile.id) &&
+          !matches.find((m) => m.id === p.id) &&
+          !discoveredProfiles.find((d) => d.id === p.id)
+      );
+
+      // Paginate
+      const start = discoverPage * DISCOVER_PAGE_SIZE;
+      const end = start + DISCOVER_PAGE_SIZE;
+      const pageProfiles = filteredProfiles.slice(start, end);
+
+      pageProfiles.forEach((profile) => {
+        const card = createProfileCard(profile);
+        discoverList.appendChild(card);
+        discoveredProfiles.push(profile);
+      });
+
+      discoverPage++;
+
+      // Hide load more if no more profiles
+      if (end >= filteredProfiles.length) {
+        loadMoreBtn.style.display = "none";
+      } else {
+        loadMoreBtn.style.display = "inline-block";
+      }
+
+      saveToStorage(STORAGE_KEYS.DISCOVERED, discoveredProfiles);
+    }
+
+    // Create profile card element for discover
+    function createProfileCard(profile) {
+      const article = document.createElement("article");
+      article.className =
+        "bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition cursor-pointer flex flex-col";
+      article.setAttribute("tabindex", "0");
+      article.setAttribute("role", "listitem");
+      article.setAttribute("aria-label", `${profile.name}, ${profile.age} years old, from ${profile.location}`);
+
+      const img = document.createElement("img");
+      img.className = "w-full h-64 object-cover";
+      img.src = profile.photo;
+      img.alt = `Portrait of ${profile.name}, a ${profile.age} year old from ${profile.location}, smiling with a tropical background`;
+      img.height = 400;
+      img.width = 400;
+      article.appendChild(img);
+
+      const div = document.createElement("div");
+      div.className = "p-4 flex-grow flex flex-col";
+
+      const h4 = document.createElement("h4");
+      h4.className = "text-xl font-semibold text-pink-600";
+      h4.textContent = `${profile.name}, ${profile.age}`;
+      div.appendChild(h4);
+
+      const pLoc = document.createElement("p");
+      pLoc.className = "text-gray-600";
+      pLoc.textContent = profile.location;
+      div.appendChild(pLoc);
+
+      const pBio = document.createElement("p");
+      pBio.className = "mt-2 text-gray-700 text-sm flex-grow";
+      pBio.textContent = profile.bio;
+      div.appendChild(pBio);
+
+      const btnsDiv = document.createElement("div");
+      btnsDiv.className = "mt-4 flex justify-between";
+
+      const btnLike = document.createElement("button");
+      btnLike.className =
+        "bg-pink-600 text-white px-4 py-2 rounded-full font-semibold hover:bg-pink-700 transition flex items-center space-x-2";
+      btnLike.setAttribute("aria-label", `Like ${profile.name}`);
+      btnLike.innerHTML = `<i class="fas fa-heart"></i><span>Like</span>`;
+      btnLike.addEventListener("click", (e) => {
+        e.stopPropagation();
+        addMatch(profile);
+        article.remove();
+      });
+
+      const btnSkip = document.createElement("button");
+      btnSkip.className =
+        "bg-gray-300 text-gray-700 px-4 py-2 rounded-full font-semibold hover:bg-gray-400 transition flex items-center space-x-2";
+      btnSkip.setAttribute("aria-label", `Skip ${profile.name}`);
+      btnSkip.innerHTML = `<i class="fas fa-times"></i><span>Skip</span>`;
+      btnSkip.addEventListener("click", (e) => {
+        e.stopPropagation();
+        article.remove();
+      });
+
+      btnsDiv.appendChild(btnLike);
+      btnsDiv.appendChild(btnSkip);
+      div.appendChild(btnsDiv);
+
+      article.appendChild(div);
+
+      // Clicking the card opens profile modal (or alert for demo)
+      article.addEventListener("click", () => {
+        alert(
+          `${profile.name}, ${profile.age} years old\nLocation: ${profile.location}\n\n${profile.bio}`
+        );
+      });
+
+      return article;
+    }
+
+    // Add profile to matches
+    function addMatch(profile) {
+      if (!matches.find((m) => m.id === profile.id)) {
+        matches.push(profile);
+        saveToStorage(STORAGE_KEYS.MATCHES, matches);
+        renderMatches();
+        updateMessageRecipients();
+        alert(`You matched with ${profile.name}!`);
+      }
+    }
+
+    // Render Matches
+    function renderMatches() {
+      matchesList.innerHTML = "";
+      if (matches.length === 0) {
+        matchesList.innerHTML =
+          '<p class="text-gray-500 text-center w-full">No matches yet. Like profiles to see them here.</p>';
+        return;
+      }
+      matches.forEach((profile) => {
+        const div = document.createElement("div");
+        div.className =
+          "min-w-[180px] bg-white rounded-lg shadow-md p-4 flex flex-col items-center cursor-pointer hover:shadow-xl transition";
+        div.setAttribute("tabindex", "0");
+        div.setAttribute("role", "listitem");
+        div.setAttribute("aria-label", `Match: ${profile.name}, ${profile.age} years old`);
+
+        const img = document.createElement("img");
+        img.className = "rounded-full w-40 h-40 object-cover mb-3";
+        img.src = profile.photo;
+        img.alt = `Match ${profile.name}, a smiling ${profile.age} year old from ${profile.location}`;
+        img.height = 160;
+        img.width = 160;
+        div.appendChild(img);
+
+        const h4 = document.createElement("h4");
+        h4.className = "text-lg font-semibold text-pink-600";
+        h4.textContent = `${profile.name}, ${profile.age}`;
+        div.appendChild(h4);
+
+        const pLoc = document.createElement("p");
+        pLoc.className = "text-gray-600 text-sm";
+        pLoc.textContent = profile.location;
+        div.appendChild(pLoc);
+
+        const btnView = document.createElement("button");
+        btnView.className =
+          "mt-3 bg-pink-600 text-white px-4 py-1 rounded-full text-sm hover:bg-pink-700 transition";
+        btnView.textContent = "View Profile";
+        btnView.setAttribute("aria-label", `View profile of ${profile.name}`);
+        btnView.addEventListener("click", () => {
+          alert(
+            `${profile.name}, ${profile.age} years old\nLocation: ${profile.location}\n\n${profile.bio}`
+          );
+        });
+        div.appendChild(btnView);
+
+        matchesList.appendChild(div);
+      });
+    }
+
+    // Render Messages
+    function renderMessages() {
+      messagesList.innerHTML = "";
+      if (messages.length === 0) {
+        messagesList.innerHTML =
+          '<p class="text-gray-500 text-center">No messages yet. Start chatting with your matches!</p>';
+        return;
+      }
+      messages.forEach((msg) => {
+        const li = document.createElement("div");
+        li.className =
+          "flex items-center space-x-4 py-4 border-b border-pink-100 last:border-0 cursor-pointer hover:bg-pink-50 rounded-md px-2";
+        li.setAttribute("role", "listitem");
+        li.setAttribute("tabindex", "0");
+        li.setAttribute("aria-label", `Message from ${msg.fromName} sent on ${new Date(msg.timestamp).toLocaleString()}`);
+
+        const profileImg = document.createElement("img");
+        profileImg.className = "w-14 h-14 rounded-full object-cover flex-shrink-0";
+        profileImg.src = msg.fromPhoto;
+        profileImg.alt = `Photo of ${msg.fromName}`;
+        profileImg.height = 60;
+        profileImg.width = 60;
+        li.appendChild(profileImg);
+
+        const contentDiv = document.createElement("div");
+        contentDiv.className = "flex-1";
+
+        const headerDiv = document.createElement("div");
+        headerDiv.className = "flex justify-between items-center";
+
+        const h4 = document.createElement("h4");
+        h4.className = "font-semibold text-pink-600";
+        h4.textContent = msg.fromName;
+
+        const timeSpan = document.createElement("span");
+        timeSpan.className = "text-xs text-gray-400";
+        timeSpan.textContent = timeAgo(msg.timestamp);
+
+        headerDiv.appendChild(h4);
+        headerDiv.appendChild(timeSpan);
+
+        const p = document.createElement("p");
+        p.className = "text-gray-700 truncate";
+        p.textContent = msg.text;
+
+        contentDiv.appendChild(headerDiv);
+        contentDiv.appendChild(p);
+
+        li.appendChild(contentDiv);
+
+        messagesList.appendChild(li);
+      });
+    }
+
+    // Utility: time ago string
+    function timeAgo(date) {
+      const now = new Date();
+      const diff = now - new Date(date);
+      const seconds = Math.floor(diff / 1000);
+      if (seconds < 60) return "Just now";
+      const minutes = Math.floor(seconds / 60);
+      if (minutes < 60) return `${minutes}m ago`;
+      const hours = Math.floor(minutes / 60);
+      if (hours < 24) return `${hours}h ago`;
+      const days = Math.floor(hours / 24);
+      return `${days}d ago`;
+    }
+
+    // Update message recipient dropdown with matches
+    function updateMessageRecipients() {
+      messageRecipientSelect.innerHTML =
+        '<option value="" disabled selected>Select recipient</option>';
+      matches.forEach((profile) => {
+        const option = document.createElement("option");
+        option.value = profile.id;
+        option.textContent = `${profile.name}, ${profile.age}`;
+        messageRecipientSelect.appendChild(option);
+      });
+      if (matches.length === 0) {
+        const option = document.createElement("option");
+        option.disabled = true;
+        option.textContent = "No matches available";
+        messageRecipientSelect.appendChild(option);
+      }
+    }
+
+    // Save profile form data
+    function saveUserProfile(data) {
+      userProfile = data;
+      saveToStorage(STORAGE_KEYS.PROFILE, userProfile);
+    }
+
+    // Load profile form data
+    function loadUserProfile() {
+      if (!userProfile) return;
+      profileForm["profile-name"].value = userProfile.name || "";
+      profileForm["profile-email"].value = userProfile.email || "";
+      profileForm["profile-location"].value = userProfile.location || "";
+      profileForm["profile-gender"].value = userProfile.gender || "";
+      profileForm["profile-bio"].value = userProfile.bio || "";
+      profileForm["profile-photo"].value = userProfile.photo || "";
+    }
+
+    // Show section by id, hide others
+    function showSection(sectionId) {
+      [discoverSection, matchesSection, messagesSection, profileSection, heroSection].forEach(
+        (section) => {
+          if (section.id === sectionId) {
+            section.classList.remove("hidden");
+            section.setAttribute("aria-hidden", "false");
+            if (sectionId !== "hero") {
+              section.focus();
+            }
+          } else {
+            section.classList.add("hidden");
+            section.setAttribute("aria-hidden", "true");
+          }
+        }
+      );
+      // Update nav aria-expanded
+      navDiscoverBtn.setAttribute("aria-expanded", sectionId === "discover");
+      navMatchesBtn.setAttribute("aria-expanded", sectionId === "matches");
+      navMessagesBtn.setAttribute("aria-expanded", sectionId === "messages");
+      navProfileBtn.setAttribute("aria-expanded", sectionId === "profile");
+    }
+
+    // Event Listeners
+    function setupEventListeners() {
+      // Navigation buttons
+      navDiscoverBtn.addEventListener("click", () => {
+        showSection("discover");
+      });
+      navMatchesBtn.addEventListener("click", () => {
+        showSection("matches");
+      });
+      navMessagesBtn.addEventListener("click", () => {
+        showSection("messages");
+      });
+      navProfileBtn.addEventListener("click", () => {
+        showSection("profile");
+      });
+
+      // Mobile menu toggle
+      menuBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+
+      // Mobile menu buttons
+      mobileMenu.querySelectorAll("button[data-target]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const target = btn.getAttribute("data-target");
+          showSection(target);
+          mobileMenu.classList.add("hidden");
+        });
+      });
+
+      // Load more discover profiles
+      loadMoreBtn.addEventListener("click", () => {
+        renderDiscover();
+      });
+
+      // Clear matches
+      clearMatchesBtn.addEventListener("click", () => {
+        if (
+          confirm(
+            "Are you sure you want to clear all your matches? This action cannot be undone."
+          )
+        ) {
+          matches = [];
+          saveToStorage(STORAGE_KEYS.MATCHES, matches);
+          renderMatches();
+          updateMessageRecipients();
+        }
+      });
+
+      // Message form submit
+      messageForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const recipientId = messageRecipientSelect.value;
+        const text = messageInput.value.trim();
+        if (!recipientId || !text) return;
+
+        const recipient = matches.find((m) => m.id === recipientId);
+        if (!recipient) {
+          alert("Selected recipient not found.");
+          return;
+        }
+
+        const newMessage = {
+          id: crypto.randomUUID(),
+          fromId: userProfile ? userProfile.id : "user",
+          fromName: userProfile ? userProfile.name : "You",
+          fromPhoto:
+            userProfile && userProfile.photo
+              ? userProfile.photo
+              : "https://placehold.co/60x60/png?text=You&font=roboto",
+          toId: recipient.id,
+          toName: recipient.name,
+          text,
+          timestamp: new Date().toISOString(),
+        };
+        messages.unshift(newMessage);
+        saveToStorage(STORAGE_KEYS.MESSAGES, messages);
+        renderMessages();
+        messageInput.value = "";
+      });
+
+      // Profile form submit
+      profileForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(profileForm);
+        const data = {
+          id: userProfile ? userProfile.id : crypto.randomUUID(),
+          name: formData.get("profile-name").trim(),
+          email: formData.get("profile-email").trim(),
+          location: formData.get("profile-location"),
+          gender: formData.get("profile-gender"),
+          bio: formData.get("profile-bio").trim(),
+          photo: formData.get("profile-photo").trim() || "https://placehold.co/400x400/png?text=Profile&font=roboto",
+        };
+        if (!data.name || !data.email || !data.location || !data.gender) {
+          alert("Please fill in all required fields.");
+          return;
+        }
+        saveUserProfile(data);
+        alert("Profile saved successfully!");
+        updateMessageRecipients();
+      });
+
+      // Get Started button scrolls to profile section
+      document.getElementById("btn-get-started").addEventListener("click", () => {
+        showSection("profile");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+
+    // Initialize app
+    function init() {
+      initState();
+      loadUserProfile();
+      renderDiscover(true);
+      renderMatches();
+      renderMessages();
+      updateMessageRecipients();
+      showSection("hero");
+      setupEventListeners();
+    }
+
+    // Run init on DOM ready
+    document.addEventListener("DOMContentLoaded", init);
+  </script>
+ </body>
+</html>
